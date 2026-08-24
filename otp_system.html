@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔴 Itachi — OTP Receiver</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+:root{
+  --blood:#8b0000;
+  --crimson:#cc0000;
+  --sharingan:#ff1a1a;
+  --moon:#ff4444;
+  --dark:#050508;
+  --dark2:#0d0005;
+  --dark3:#120008;
+  --panel:#1a0008;
+  --panel2:#220010;
+  --border:#3d0010;
+  --border2:#5c0018;
+  --text:#c9a0a0;
+  --text2:#7a4040;
+  --gold:#c8860a;
+  --gold2:#e8a020;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Share Tech Mono',monospace;
+  background:var(--dark);
+  color:var(--text);
+  min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, #3d000844 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 50%, #2a000522 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, #1a000322 0%, transparent 60%);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:#0d0005}
+::-webkit-scrollbar-thumb{background:#5c0018;border-radius:4px}
+
+/* SHARINGAN SPINNER */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 8px #cc000066}50%{box-shadow:0 0 20px #ff0000aa,0 0 40px #cc000044}}
+@keyframes flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:0.85}94%{opacity:1}97%{opacity:0.9}98%{opacity:1}}
+@keyframes blood-drip{0%{transform:translateY(-100%);opacity:0}20%{opacity:1}100%{transform:translateY(100vh);opacity:0.3}}
+@keyframes sharingan-rotate{to{transform:rotate(360deg)}}
+
+/* NAV */
+.nav{
+  background:linear-gradient(180deg,#1a0008,#0d0005);
+  border-bottom:1px solid var(--border2);
+  padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px;
+  position:relative;
+  overflow:hidden;
+}
+.nav::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#ff000066,#cc0000,#ff000066,transparent);
+}
+.nav::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#5c0018,#8b0000,#5c0018,transparent);
+}
+.nav-title{
+  font-family:'Cinzel',serif;
+  font-size:15px;font-weight:700;
+  color:var(--sharingan);
+  text-shadow:0 0 20px #ff000088,0 0 40px #cc000044;
+  display:flex;align-items:center;gap:10px;
+  animation:flicker 8s infinite;
+  letter-spacing:2px;
+}
+.nav-sharingan{
+  width:28px;height:28px;
+  background:radial-gradient(circle,#cc0000,#8b0000,#000);
+  border-radius:50%;
+  border:2px solid #cc0000;
+  display:flex;align-items:center;justify-content:center;
+  animation:pulse-red 2s infinite;
+  font-size:16px;
+  box-shadow:0 0 15px #cc000088;
+}
+.nav-right{display:flex;gap:8px}
+.nav-btn{
+  padding:5px 12px;border-radius:4px;font-size:11px;cursor:pointer;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text2);font-family:'Share Tech Mono',monospace;
+  transition:all 0.2s;letter-spacing:1px;
+}
+.nav-btn:hover{border-color:var(--crimson);color:var(--text)}
+.nav-btn.admin{border-color:#5c0018;color:#cc6666}
+.nav-btn.active-admin{background:var(--blood);color:#ffaaaa;border-color:var(--crimson);box-shadow:0 0 10px #8b000055}
+
+/* PAGES */
+.page{display:none;max-width:600px;margin:0 auto;padding:16px}
+.page.active{display:block}
+
+/* HERO */
+.hero{text-align:center;padding:28px 0 18px;position:relative}
+.hero-eye{font-size:48px;display:block;margin-bottom:10px;animation:pulse-red 2s infinite;filter:drop-shadow(0 0 15px #cc0000)}
+.hero h1{
+  font-family:'Cinzel',serif;
+  font-size:20px;font-weight:700;
+  color:var(--sharingan);
+  text-shadow:0 0 20px #ff000066;
+  margin-bottom:6px;letter-spacing:3px;
+}
+.hero p{font-size:12px;color:var(--text2);letter-spacing:1px}
+.hero-quote{font-size:11px;color:#5c2020;margin-top:8px;font-style:italic}
+
+/* CARDS */
+.card{
+  background:linear-gradient(135deg,var(--panel),var(--dark2));
+  border:1px solid var(--border);
+  border-radius:8px;padding:14px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent);
+}
+.card-title{
+  font-size:12px;font-weight:bold;
+  color:var(--moon);
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;
+  text-transform:uppercase;letter-spacing:2px;
+  text-shadow:0 0 10px #ff000055;
+}
+
+/* SEARCH */
+.search-box{
+  background:linear-gradient(135deg,var(--panel),var(--dark2));
+  border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px;
+}
+.search-row{display:flex;gap:8px}
+.search-input{
+  flex:1;background:var(--dark2);
+  border:1px solid var(--border2);border-radius:4px;
+  padding:9px 12px;font-size:13px;color:var(--text);
+  outline:none;font-family:'Share Tech Mono',monospace;
+  transition:border-color 0.2s;
+}
+.search-input:focus{border-color:var(--crimson);box-shadow:0 0 10px #8b000033}
+.search-btn{
+  background:linear-gradient(135deg,var(--blood),#6b0000);
+  color:#ffaaaa;border:1px solid var(--crimson);border-radius:4px;
+  padding:9px 16px;font-size:12px;cursor:pointer;
+  white-space:nowrap;font-family:'Share Tech Mono',monospace;
+  letter-spacing:1px;transition:all 0.2s;
+}
+.search-btn:hover{background:linear-gradient(135deg,var(--crimson),var(--blood));box-shadow:0 0 15px #cc000055}
+
+/* NUMBER CARDS */
+.number-card{
+  background:linear-gradient(135deg,var(--panel),var(--dark2));
+  border:1px solid var(--border);border-radius:8px;
+  padding:14px;margin-bottom:8px;cursor:pointer;
+  transition:all 0.2s;position:relative;overflow:hidden;
+}
+.number-card::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,transparent,var(--crimson),transparent);
+  opacity:0;transition:opacity 0.2s;
+}
+.number-card:hover{border-color:var(--crimson);box-shadow:0 0 15px #8b000033}
+.number-card:hover::after{opacity:1}
+.number-card.selected{border-color:var(--sharingan);background:linear-gradient(135deg,#1a0008,#0d0003);box-shadow:0 0 20px #cc000044}
+.number-card.selected::after{opacity:1}
+.num-display{
+  font-size:17px;font-weight:bold;font-family:'Share Tech Mono',monospace;
+  color:var(--sharingan);letter-spacing:3px;
+  text-shadow:0 0 10px #cc000066;
+}
+.num-meta{font-size:10px;color:var(--text2);margin-top:5px;letter-spacing:1px}
+.num-status{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--crimson);margin-right:5px;box-shadow:0 0 6px var(--crimson)}
+
+/* OTP SECTION */
+.otp-section{
+  background:linear-gradient(135deg,#150005,#0a0002);
+  border:1px solid var(--crimson);border-radius:8px;
+  padding:14px;margin-bottom:10px;
+  box-shadow:0 0 20px #8b000033 inset;
+}
+.otp-title{font-size:11px;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:2px}
+.otp-item{
+  background:linear-gradient(135deg,var(--panel2),var(--panel));
+  border:1px solid var(--border2);border-radius:6px;
+  padding:14px;margin-bottom:8px;position:relative;
+}
+.otp-item:last-child{margin-bottom:0}
+.otp-code-big{
+  font-size:32px;font-weight:bold;font-family:'Share Tech Mono',monospace;
+  color:var(--sharingan);letter-spacing:6px;text-align:center;padding:8px 0;
+  text-shadow:0 0 20px #ff000088,0 0 40px #cc000044;
+  animation:pulse-red 3s infinite;
+}
+.otp-sender{font-size:11px;color:var(--text2);text-align:center;margin-top:3px;letter-spacing:1px}
+.otp-time{font-size:10px;color:#3d1010;text-align:center;margin-top:3px}
+.otp-msg-text{font-size:11px;color:#5c2828;text-align:center;margin-top:5px;font-style:italic}
+.copy-otp{
+  position:absolute;top:8px;right:8px;
+  background:var(--blood);color:#ffaaaa;
+  border:1px solid var(--crimson);border-radius:3px;
+  padding:3px 8px;font-size:10px;cursor:pointer;
+  font-family:'Share Tech Mono',monospace;letter-spacing:1px;
+  transition:all 0.2s;
+}
+.copy-otp:hover{background:var(--crimson);box-shadow:0 0 10px #cc000066}
+
+.refresh-btn{
+  width:100%;background:linear-gradient(135deg,var(--blood),#6b0000);
+  color:#ffaaaa;border:1px solid var(--crimson);border-radius:6px;
+  padding:10px;font-size:12px;cursor:pointer;margin-top:8px;
+  font-family:'Share Tech Mono',monospace;letter-spacing:2px;
+  transition:all 0.2s;
+}
+.refresh-btn:hover{box-shadow:0 0 20px #cc000066}
+
+.no-otp{text-align:center;color:#3d1010;padding:20px;font-size:12px;letter-spacing:1px}
+
+/* TELEGRAM SETUP */
+.tg-setup{
+  background:linear-gradient(135deg,var(--panel),var(--dark2));
+  border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px;
+}
+.tg-setup-title{font-size:12px;font-weight:bold;color:var(--moon);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase}
+
+/* INPUTS */
+label{font-size:11px;color:var(--text2);display:block;margin-bottom:4px;margin-top:10px;letter-spacing:1px;text-transform:uppercase}
+input,select,textarea{
+  width:100%;background:var(--dark2);
+  border:1px solid var(--border2);border-radius:4px;
+  padding:8px 12px;font-size:13px;color:var(--text);outline:none;
+  font-family:'Share Tech Mono',monospace;transition:all 0.2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--crimson);box-shadow:0 0 10px #8b000033}
+select option{background:#0d0005}
+
+/* BUTTONS */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;padding:10px;border-radius:6px;font-size:12px;font-weight:bold;
+  cursor:pointer;border:none;margin-top:10px;
+  font-family:'Share Tech Mono',monospace;letter-spacing:2px;text-transform:uppercase;
+  transition:all 0.2s;
+}
+.btn-blue{background:linear-gradient(135deg,var(--blood),#6b0000);color:#ffcccc;border:1px solid var(--crimson)}
+.btn-blue:hover{box-shadow:0 0 20px #cc000055}
+.btn-tg{background:linear-gradient(135deg,#0d1b2a,#1a2744);color:#90caf9;border:1px solid #1565c0}
+.btn-green{background:linear-gradient(135deg,#8b0000,#cc0000);color:#ffdddd;border:1px solid var(--sharingan)}
+.btn-green:hover{box-shadow:0 0 20px #ff000055}
+.btn-red{background:linear-gradient(135deg,#4a0000,#8b0000);color:#ff8888;border:1px solid #cc0000}
+.btn-red:hover{box-shadow:0 0 15px #cc000055}
+
+/* ADMIN LOGIN */
+.login-wrap{min-height:85vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{
+  background:linear-gradient(135deg,var(--panel),var(--dark2));
+  border:1px solid var(--border2);border-radius:12px;
+  padding:30px 22px;width:100%;max-width:340px;
+  box-shadow:0 0 40px #8b000033;
+  position:relative;overflow:hidden;
+}
+.login-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--sharingan),transparent);
+}
+.login-eye{font-size:50px;text-align:center;display:block;margin-bottom:12px;animation:pulse-red 2s infinite;filter:drop-shadow(0 0 20px #cc0000)}
+.login-title{
+  font-family:'Cinzel',serif;font-size:16px;font-weight:700;
+  color:var(--sharingan);text-align:center;margin-bottom:6px;
+  letter-spacing:3px;text-shadow:0 0 15px #ff000066;
+}
+.login-subtitle{font-size:10px;color:var(--text2);text-align:center;margin-bottom:20px;letter-spacing:2px}
+.login-err{
+  background:#8b000022;color:#ff8888;border:1px solid var(--blood);
+  border-radius:4px;padding:8px 12px;font-size:11px;margin-top:8px;display:none;letter-spacing:1px;
+}
+
+/* ADMIN PANEL */
+.admin-tabs{
+  display:flex;
+  background:linear-gradient(180deg,var(--panel),var(--dark2));
+  border-bottom:1px solid var(--border2);overflow-x:auto;
+}
+.atab{
+  padding:10px 14px;font-size:11px;cursor:pointer;color:var(--text2);
+  border:none;background:transparent;white-space:nowrap;
+  border-bottom:2px solid transparent;
+  font-family:'Share Tech Mono',monospace;letter-spacing:1px;
+  transition:all 0.2s;
+}
+.atab:hover{color:var(--text)}
+.atab.active{color:var(--sharingan);border-bottom:2px solid var(--sharingan);text-shadow:0 0 10px #ff000055}
+
+.admin-content{display:none;max-width:700px;margin:0 auto;padding:14px}
+.admin-content.active{display:block}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{
+  background:linear-gradient(135deg,var(--panel),var(--dark2));
+  border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.stat-n{font-size:22px;font-weight:bold;color:var(--sharingan);text-shadow:0 0 10px #cc000055}
+.stat-l{font-size:9px;color:var(--text2);text-transform:uppercase;margin-top:3px;letter-spacing:1px}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{
+  background:var(--dark2);color:var(--text2);
+  padding:8px;text-align:left;
+  border-bottom:1px solid var(--border2);
+  font-size:10px;text-transform:uppercase;letter-spacing:1px;
+}
+td{padding:9px 8px;border-bottom:1px solid #1a0005;vertical-align:middle}
+tr:hover td{background:#1a0008}
+
+/* PILLS */
+.pill{padding:2px 8px;border-radius:20px;font-size:10px;letter-spacing:1px}
+.pill-on{background:#8b000022;color:#ff8888;border:1px solid var(--blood)}
+.pill-off{background:#1a000822;color:#5c2020;border:1px solid #3d0010}
+
+/* ACTION BUTTONS */
+.action-btn{padding:4px 10px;border-radius:3px;font-size:10px;cursor:pointer;border:none;font-family:'Share Tech Mono',monospace;letter-spacing:1px}
+.del-btn{background:#4a000022;color:#ff6666;border:1px solid #8b0000}
+.toggle-btn{background:#1a000833;color:#cc6666;border:1px solid #5c0018}
+
+/* MSG BOXES */
+.msg-box{border-radius:4px;padding:8px 12px;font-size:11px;margin-top:8px;display:none;letter-spacing:1px}
+.msg-ok{background:#8b000022;color:#ff9999;border:1px solid var(--blood)}
+.msg-err{background:#1a000022;color:#cc4444;border:1px solid #5c0018}
+
+/* MASKED */
+.masked{color:var(--sharingan);font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:2px;text-shadow:0 0 8px #cc000044}
+
+/* AUTO REFRESH BAR */
+.auto-bar{
+  background:linear-gradient(135deg,#1a0005,#0d0003);
+  border:1px solid var(--border2);border-radius:6px;
+  padding:8px 14px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;font-size:11px;color:#cc6666;letter-spacing:1px;
+}
+.countdown{font-weight:bold;color:var(--sharingan);text-shadow:0 0 8px #cc000066}
+
+/* BLOOD MOON DECOR */
+.blood-moon{
+  position:fixed;top:-80px;right:-80px;width:200px;height:200px;
+  background:radial-gradient(circle,#8b000033 0%,#5c001522 40%,transparent 70%);
+  border-radius:50%;pointer-events:none;z-index:0;
+  animation:pulse-red 4s infinite;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-title">📱 OTP Receiver</div>
+  <div class="nav-right">
+    <button class="nav-btn" onclick="showPage('public')">🏠 Home</button>
+    <button class="nav-btn admin" id="admin-nav-btn" onclick="adminNavClick()">🔐 Admin</button>
+  </div>
+</div>
+
+<!-- ===== PUBLIC PAGE ===== -->
+<div id="page-public" class="page active">
+  <div class="hero">
+    <h1>📲 OTP Receiver</h1>
+    <p>Apna number search karo aur OTP dekho</p>
+  </div>
+
+  <!-- Telegram Setup -->
+  <div class="tg-setup">
+    <div class="tg-setup-title">⚙️ Apni Telegram Settings (ek baar set karo)</div>
+    <label>Telegram Bot Token</label>
+    <input type="password" id="pub-tg-token" placeholder="Bot token daalo">
+    <label>Group/Channel Chat ID ya @username</label>
+    <input type="text" id="pub-tg-chat" placeholder="@mygroup ya -100123456789">
+    <button class="btn btn-tg" onclick="savePubTG()">💾 Save Settings</button>
+    <div class="msg-box" id="pub-tg-msg"></div>
+  </div>
+
+  <!-- Number Search -->
+  <div class="search-box">
+    <div style="font-size:13px;color:#90a4ae;margin-bottom:10px">🔍 Number search karo ya list mein se chunao</div>
+    <div class="search-row">
+      <input type="text" class="search-input" id="num-search" placeholder="Number daalo jaise: 92300..." oninput="searchNumbers()">
+      <button class="search-btn" onclick="searchNumbers()">Search</button>
+    </div>
+  </div>
+
+  <!-- Numbers List -->
+  <div id="numbers-list"></div>
+
+  <!-- OTP Display -->
+  <div id="otp-display" style="display:none">
+    <div class="auto-bar">
+      <span>🔄 Auto refresh</span>
+      <span>Next: <span class="countdown" id="countdown">30</span>s</span>
+    </div>
+    <div class="otp-section">
+      <div class="otp-title">🔑 Latest OTPs</div>
+      <div id="otp-list"></div>
+    </div>
+    <button class="refresh-btn" onclick="refreshOTPs()">🔄 Refresh Karo</button>
+  </div>
+</div>
+
+<!-- ===== ADMIN LOGIN ===== -->
+<div id="page-login" class="page">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-title">🔐 Admin Login</div>
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Username">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn btn-blue" onclick="doLogin()" style="margin-top:14px">Login</button>
+      <div class="login-err" id="login-err">Username ya password galat hai!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="page-admin" class="page" style="max-width:100%;padding:0">
+  <div class="admin-tabs">
+    <button class="atab active" onclick="showATab('a-dashboard',this)">📊 Dashboard</button>
+    <button class="atab" onclick="showATab('a-numbers',this)">📱 Numbers</button>
+    <button class="atab" onclick="showATab('a-settings',this)">⚙️ API Settings</button>
+    <button class="atab" onclick="showATab('a-telegram',this)">✈️ Telegram</button>
+    <button class="atab" onclick="showATab('a-auto',this)">⚡ Auto Forward</button>
+    <button class="atab" onclick="doLogout()">🚪 Logout</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="a-dashboard" class="admin-content active">
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n" id="a-total-num">0</div><div class="stat-l">Numbers</div></div>
+      <div class="stat"><div class="stat-n" id="a-total-otp" style="color:#ffb74d">0</div><div class="stat-l">OTPs Today</div></div>
+      <div class="stat"><div class="stat-n" id="a-active-num" style="color:#69f0ae">0</div><div class="stat-l">Active</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ Quick Fetch</div>
+      <label>Records</label>
+      <select id="a-quick-rec"><option>25</option><option>50</option><option>100</option><option>200</option></select>
+      <label>CLI Filter (optional)</label>
+      <input type="text" id="a-quick-cli" placeholder="Google, Facebook...">
+      <button class="btn btn-green" onclick="adminQuickFetch()">🔍 Fetch All OTPs</button>
+      <div class="msg-box" id="a-fetch-msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Recent OTPs</div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Time</th><th>Number (Masked)</th><th>OTP</th><th>Sender</th><th>Message</th></tr></thead>
+          <tbody id="a-recent-tbody"><tr><td colspan="5" style="text-align:center;color:#37474f;padding:20px">Fetch karo</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Numbers Management -->
+  <div id="a-numbers" class="admin-content">
+    <div class="card">
+      <div class="card-title">➕ Number Add Karo</div>
+      <label>Full Number (international format)</label>
+      <input type="text" id="a-add-num" placeholder="+923001234567 ya 923001234567">
+      <label>Label (optional)</label>
+      <input type="text" id="a-add-label" placeholder="jaise: My Number 1">
+      <button class="btn btn-blue" onclick="addNumber()">➕ Add Karo</button>
+      <div class="msg-box" id="a-num-msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📱 All Numbers</div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Number (Masked)</th><th>Full Number</th><th>Label</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="a-num-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Settings -->
+  <div id="a-settings" class="admin-content">
+    <div class="card">
+      <div class="card-title">⚙️ CR API Settings</div>
+      <label>API Token</label>
+      <input type="password" id="a-api-token" placeholder="Admin token">
+      <label>API URL</label>
+      <input type="text" id="a-api-url" value="http://147.135.212.197/crapi/had/viewstats">
+      <button class="btn btn-blue" onclick="saveAdminAPI()">💾 Save</button>
+      <div class="msg-box" id="a-api-msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔢 Number Masking Preview</div>
+      <label>Test number daalo</label>
+      <input type="text" id="mask-test-input" placeholder="+923001234567" oninput="previewMask()">
+      <div style="margin-top:10px;font-size:13px;color:#90a4ae">Preview: <span id="mask-preview" style="color:#ffb74d;font-family:monospace;font-size:16px"></span></div>
+      <label style="margin-top:12px">Masking style</label>
+      <select id="mask-style" onchange="previewMask()">
+        <option value="mid">Middle hide (shuru+end dikhe)</option>
+        <option value="end">End hide (sirf shuru dikhe)</option>
+      </select>
+      <label>Visible digits (start)</label>
+      <select id="mask-start" onchange="previewMask()">
+        <option value="3" selected>3 digits</option>
+        <option value="4">4 digits</option>
+        <option value="5">5 digits</option>
+      </select>
+      <label>Visible digits (end)</label>
+      <select id="mask-end" onchange="previewMask()">
+        <option value="2">2 digits</option>
+        <option value="3" selected>3 digits</option>
+        <option value="4">4 digits</option>
+      </select>
+      <button class="btn btn-blue" onclick="saveMaskSettings()">💾 Save Masking Settings</button>
+      <div class="msg-box" id="mask-msg"></div>
+    </div>
+  </div>
+
+  <!-- AUTO FORWARD -->
+  <div id="a-auto" class="admin-content">
+    <!-- Status Bar -->
+    <div style="background:#111827;border:1px solid #1e3a5f;border-radius:10px;padding:14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="auto-status-dot" style="width:12px;height:12px;border-radius:50%;background:#ef5350;transition:all 0.3s"></div>
+        <span id="auto-status-txt" style="font-size:14px;font-weight:bold;color:#ef5350">Stopped</span>
+      </div>
+      <div id="auto-stats-box" style="font-size:12px">Checks: <b>0</b> &nbsp; Sent: <b>0</b> &nbsp; Errors: <b>0</b></div>
+    </div>
+
+    <!-- Start/Stop -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <button id="auto-start-btn" class="btn btn-green" onclick="startAutoForward()" style="margin-top:0">▶ Start Auto Forward</button>
+      <button id="auto-stop-btn" class="btn btn-red" onclick="stopAutoForward()" style="display:none;margin-top:0">⏹ Stop</button>
+    </div>
+
+    <!-- Settings -->
+    <div class="card">
+      <div class="card-title" style="color:#ffb74d">⚙️ Auto Forward Settings</div>
+      <label>Check interval (kitni der baad naya OTP check ho)</label>
+      <select id="auto-interval">
+        <option value="10000">10 seconds (fastest)</option>
+        <option value="20000">20 seconds</option>
+        <option value="30000" selected>30 seconds (recommended)</option>
+        <option value="60000">1 minute</option>
+        <option value="120000">2 minutes</option>
+        <option value="300000">5 minutes</option>
+      </select>
+      <label>Records per check</label>
+      <select id="auto-records-sel">
+        <option value="25">25</option>
+        <option value="50" selected>50</option>
+        <option value="100">100</option>
+        <option value="200">200 (max)</option>
+      </select>
+      <label>CLI Filter (optional — sirf is sender ka forward karo)</label>
+      <input type="text" id="auto-cli-filter" placeholder="Google, Facebook, OTP — ya khali rakho sab k liye">
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px;background:#0a0e1a;border-radius:6px">
+        <input type="checkbox" id="auto-skip-dup" checked style="width:auto;margin:0">
+        <label style="margin:0;color:#b0bec5">Duplicate OTP skip karo (same OTP dobara na bheje)</label>
+      </div>
+      <button class="btn btn-blue" onclick="saveAutoSettings()">💾 Settings Save Karo</button>
+      <div class="msg-box" id="a-auto-msg"></div>
+    </div>
+
+    <!-- Live Log -->
+    <div class="card">
+      <div class="card-title" style="color:#607d8b">📋 Live Activity Log</div>
+      <div id="auto-log" style="background:#060c18;border:1px solid #1e3a5f;border-radius:8px;padding:10px;height:200px;overflow-y:auto;font-family:monospace">
+        <div style="color:#37474f;font-size:12px;text-align:center;padding:20px">Auto Forward start karo — log yahan dikhega</div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div style="background:#1a237e22;border:1px solid #3949ab;border-radius:8px;padding:12px;font-size:12px;color:#90a4ae;line-height:1.6">
+      ℹ️ <b style="color:#82b1ff">Kaise kaam karta hai:</b><br>
+      1. API se har <b>X seconds</b> mein naye OTPs check hote hain<br>
+      2. Jo OTP pehle nahi dekha — woh turant <b>Telegram group</b> mein chala jaata hai<br>
+      3. Duplicate automatically skip hote hain<br>
+      4. <b>Browser band mat karo</b> — tab tak chal ta rahega jab tak tab khula ho
+    </div>
+  </div>
+
+  <!-- Telegram Admin -->
+  <div id="a-telegram" class="admin-content">
+    <div class="card">
+      <div class="card-title">✈️ Admin Telegram Bot</div>
+      <label>Bot Token</label>
+      <input type="password" id="a-tg-token" placeholder="Admin bot token">
+      <label>Admin Channel/Group Chat ID</label>
+      <input type="text" id="a-tg-chat" placeholder="@adminchannel ya -100xxx">
+      <button class="btn btn-tg" onclick="saveAdminTG()">💾 Save</button>
+      <button class="btn btn-green" onclick="testAdminTG()" style="margin-top:8px">🧪 Test</button>
+      <div class="msg-box" id="a-tg-msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📤 Bulk Forward</div>
+      <label>Records</label>
+      <select id="a-bulk-rec"><option>25</option><option selected>50</option><option>100</option></select>
+      <label>CLI Filter</label>
+      <input type="text" id="a-bulk-cli" placeholder="Optional">
+      <button class="btn btn-green" onclick="bulkForward()">🚀 Forward to Telegram</button>
+      <div class="msg-box" id="a-bulk-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA STORE =====
+const PROXY='https://api.allorigins.win/raw?url=';
+let numbers=JSON.parse(localStorage.getItem('otp_numbers')||'[]');
+let selectedNum=null;
+let refreshTimer=null;
+let countdown=30;
+let countdownTimer=null;
+
+// ===== MASKING =====
+function maskNumber(num){
+  const s=num.replace(/\D/g,'');
+  const startV=parseInt(localStorage.getItem('mask_start')||'3');
+  const endV=parseInt(localStorage.getItem('mask_end')||'3');
+  const style=localStorage.getItem('mask_style')||'mid';
+  if(s.length<=startV+endV) return s;
+  const start=s.substring(0,startV);
+  const end=s.substring(s.length-endV);
+  const mid='*'.repeat(s.length-startV-endV);
+  if(style==='end') return start+'*'.repeat(s.length-startV);
+  return start+mid+end;
+}
+
+function previewMask(){
+  const num=document.getElementById('mask-test-input').value;
+  if(!num){document.getElementById('mask-preview').textContent='';return;}
+  const startV=parseInt(document.getElementById('mask-start').value);
+  const endV=parseInt(document.getElementById('mask-end').value);
+  const style=document.getElementById('mask-style').value;
+  const s=num.replace(/\D/g,'');
+  if(s.length<=startV+endV){document.getElementById('mask-preview').textContent=s;return;}
+  const start=s.substring(0,startV);
+  const end=s.substring(s.length-endV);
+  const mid='*'.repeat(s.length-startV-endV);
+  document.getElementById('mask-preview').textContent=style==='end'?start+'*'.repeat(s.length-startV):start+mid+end;
+}
+
+function saveMaskSettings(){
+  localStorage.setItem('mask_start',document.getElementById('mask-start').value);
+  localStorage.setItem('mask_end',document.getElementById('mask-end').value);
+  localStorage.setItem('mask_style',document.getElementById('mask-style').value);
+  showMsg('mask-msg','Masking settings save ho gayi!',false);
+  renderPublicNumbers();
+}
+
+// ===== AUTH =====
+const ADMIN_USER='ali00sona1';
+const ADMIN_PASS='@Ali.1122';
+
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  if(u===ADMIN_USER && p===ADMIN_PASS){
+    localStorage.setItem('admin_logged','1');
+    showPage('admin');
+    loadAdminData();
+    document.getElementById('admin-nav-btn').className='nav-btn active-admin';
+    document.getElementById('admin-nav-btn').textContent='✅ Admin';
+  }else{
+    document.getElementById('login-err').style.display='block';
+    setTimeout(()=>document.getElementById('login-err').style.display='none',3000);
+  }
+}
+
+function doLogout(){
+  localStorage.removeItem('admin_logged');
+  document.getElementById('admin-nav-btn').className='nav-btn admin';
+  document.getElementById('admin-nav-btn').textContent='🔐 Admin';
+  showPage('public');
+}
+
+function adminNavClick(){
+  if(localStorage.getItem('admin_logged')==='1'){showPage('admin');loadAdminData();}
+  else showPage('login');
+}
+
+// ===== PAGES =====
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(id==='public') renderPublicNumbers();
+}
+
+function showATab(id,el){
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ===== API =====
+function getAPI(){
+  return {
+    token:localStorage.getItem('api_token')||'',
+    url:localStorage.getItem('api_url')||'http://147.135.212.197/crapi/had/viewstats'
+  };
+}
+
+async function fetchOTPs(params={}){
+  const api=getAPI();
+  if(!api.token) throw new Error('API token nahi hai — Admin settings mein save karo');
+  let url=api.url+'?token='+encodeURIComponent(api.token);
+  if(params.records) url+='&records='+params.records;
+  if(params.filtercli) url+='&filtercli='+encodeURIComponent(params.filtercli);
+  if(params.filternum) url+='&filternum='+encodeURIComponent(params.filternum);
+  const res=await fetch(PROXY+encodeURIComponent(url));
+  const data=await res.json();
+  if(data.status==='error') throw new Error(data.msg||'API error');
+  return data.data||[];
+}
+
+function extractOTP(msg){
+  if(!msg) return null;
+  const m=msg.match(/\b(\d{4,8})\b/);
+  return m?m[1]:null;
+}
+
+// ===== PUBLIC — NUMBERS =====
+function searchNumbers(){
+  const q=document.getElementById('num-search').value.trim().toLowerCase();
+  const filtered=q?numbers.filter(n=>n.num.includes(q)||maskNumber(n.num).includes(q)||(n.label||'').toLowerCase().includes(q)):numbers;
+  renderNumberCards(filtered);
+}
+
+function renderPublicNumbers(){
+  renderNumberCards(numbers);
+}
+
+function renderNumberCards(list){
+  const box=document.getElementById('numbers-list');
+  if(!list.length){
+    box.innerHTML='<div style="text-align:center;color:#37474f;padding:30px;font-size:13px">Koi number available nahi — Admin se rabta karein</div>';
+    return;
+  }
+  box.innerHTML=list.filter(n=>n.active!==false).map(n=>`
+    <div class="number-card ${selectedNum===n.num?'selected':''}" onclick="selectNumber('${n.num}')">
+      <div class="num-display">${maskNumber(n.num)}</div>
+      <div class="num-meta"><span class="num-status"></span>${n.label||'Available Number'} · Click to get OTP</div>
+    </div>
+  `).join('');
+}
+
+function selectNumber(num){
+  selectedNum=num;
+  renderPublicNumbers();
+  document.getElementById('otp-display').style.display='block';
+  refreshOTPs();
+  startCountdown();
+}
+
+async function refreshOTPs(){
+  if(!selectedNum) return;
+  const box=document.getElementById('otp-list');
+  box.innerHTML='<div class="no-otp">Loading...</div>';
+  try{
+    const rows=await fetchOTPs({records:10,filternum:selectedNum});
+    if(!rows.length){
+      box.innerHTML='<div class="no-otp">Abhi koi OTP nahi aya — thodi der mein dobara check karo</div>';
+      return;
+    }
+    const filtered=rows.filter(r=>r.num===selectedNum||r.num.includes(selectedNum.replace(/\D/g,''))||selectedNum.includes(r.num));
+    if(!filtered.length){
+      box.innerHTML='<div class="no-otp">Is number ke liye abhi koi OTP nahi</div>';
+      return;
+    }
+    box.innerHTML=filtered.slice(0,5).map(r=>{
+      const otp=extractOTP(r.message);
+      return `<div class="otp-item">
+        ${otp?`<button class="copy-otp" onclick="copyOTP('${otp}',this)">📋 Copy</button>`:''}
+        <div class="otp-code-big">${otp||'N/A'}</div>
+        <div class="otp-sender">📨 ${r.cli||'—'}</div>
+        <div class="otp-msg-text">${r.message||''}</div>
+        <div class="otp-time">⏰ ${(r.dt||'').substring(0,16)}</div>
+      </div>`;
+    }).join('');
+    // Auto forward to user's telegram if set
+    const tgT=localStorage.getItem('pub_tg_token');
+    const tgC=localStorage.getItem('pub_tg_chat');
+    if(tgT && tgC && filtered.length){
+      filtered.slice(0,3).forEach(async r=>{
+        const otp=extractOTP(r.message);
+        if(!otp) return;
+        try{
+          await sendTG(tgT,tgC,`📲 <b>OTP Received!</b>\n📱 Number: <code>${maskNumber(r.num)}</code>\n🔑 OTP: <b>${otp}</b>\n📨 From: ${r.cli||'—'}\n💬 ${r.message}`);
+        }catch(e){}
+      });
+    }
+  }catch(e){
+    box.innerHTML=`<div class="no-otp" style="color:#ef9a9a">Error: ${e.message}</div>`;
+  }
+}
+
+function startCountdown(){
+  clearInterval(countdownTimer);
+  countdown=30;
+  document.getElementById('countdown').textContent=countdown;
+  countdownTimer=setInterval(()=>{
+    countdown--;
+    document.getElementById('countdown').textContent=countdown;
+    if(countdown<=0){
+      countdown=30;
+      refreshOTPs();
+    }
+  },1000);
+}
+
+function copyOTP(otp,btn){
+  navigator.clipboard.writeText(otp).catch(()=>{});
+  btn.textContent='✅ Copied!';
+  setTimeout(()=>btn.textContent='📋 Copy',2000);
+}
+
+function savePubTG(){
+  const t=document.getElementById('pub-tg-token').value.trim();
+  const c=document.getElementById('pub-tg-chat').value.trim();
+  if(!t||!c){showMsg('pub-tg-msg','Dono fields bharain!',true);return;}
+  localStorage.setItem('pub_tg_token',t);
+  localStorage.setItem('pub_tg_chat',c);
+  showMsg('pub-tg-msg','Telegram settings save! Ab OTP auto forward hoga.',false);
+}
+
+// ===== ADMIN FUNCTIONS =====
+function loadAdminData(){
+  const api=getAPI();
+  if(api.token) document.getElementById('a-api-token').value=api.token;
+  document.getElementById('a-api-url').value=api.url;
+  const tgT=localStorage.getItem('admin_tg_token');
+  const tgC=localStorage.getItem('admin_tg_chat');
+  if(tgT) document.getElementById('a-tg-token').value=tgT;
+  if(tgC) document.getElementById('a-tg-chat').value=tgC;
+  const ms=localStorage.getItem('mask_start');
+  const me=localStorage.getItem('mask_end');
+  const mst=localStorage.getItem('mask_style');
+  if(ms) document.getElementById('mask-start').value=ms;
+  if(me) document.getElementById('mask-end').value=me;
+  if(mst) document.getElementById('mask-style').value=mst;
+  renderAdminNumbers();
+  document.getElementById('a-total-num').textContent=numbers.length;
+  document.getElementById('a-active-num').textContent=numbers.filter(n=>n.active!==false).length;
+}
+
+function addNumber(){
+  const num=document.getElementById('a-add-num').value.trim().replace(/\s/g,'');
+  const label=document.getElementById('a-add-label').value.trim();
+  if(!num){showMsg('a-num-msg','Number daalo!',true);return;}
+  if(numbers.find(n=>n.num===num)){showMsg('a-num-msg','Yeh number already hai!',true);return;}
+  numbers.push({num,label,active:true,added:new Date().toISOString()});
+  saveNumbers();
+  renderAdminNumbers();
+  document.getElementById('a-add-num').value='';
+  document.getElementById('a-add-label').value='';
+  showMsg('a-num-msg','Number add ho gaya!',false);
+  document.getElementById('a-total-num').textContent=numbers.length;
+  document.getElementById('a-active-num').textContent=numbers.filter(n=>n.active!==false).length;
+}
+
+function toggleNumber(num){
+  const n=numbers.find(x=>x.num===num);
+  if(n) n.active=!n.active;
+  saveNumbers();
+  renderAdminNumbers();
+  document.getElementById('a-active-num').textContent=numbers.filter(n=>n.active!==false).length;
+}
+
+function deleteNumber(num){
+  if(!confirm('Delete karein?')) return;
+  numbers=numbers.filter(n=>n.num!==num);
+  saveNumbers();
+  renderAdminNumbers();
+  document.getElementById('a-total-num').textContent=numbers.length;
+}
+
+function saveNumbers(){
+  localStorage.setItem('otp_numbers',JSON.stringify(numbers));
+}
+
+function renderAdminNumbers(){
+  const tbody=document.getElementById('a-num-tbody');
+  if(!numbers.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#37474f;padding:20px">Koi number nahi</td></tr>';return;}
+  tbody.innerHTML=numbers.map(n=>`<tr>
+    <td class="masked">${maskNumber(n.num)}</td>
+    <td style="font-family:monospace;font-size:11px">${n.num}</td>
+    <td>${n.label||'—'}</td>
+    <td><span class="pill ${n.active!==false?'pill-on':'pill-off'}">${n.active!==false?'Active':'Off'}</span></td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap">
+      <button class="action-btn toggle-btn" onclick="toggleNumber('${n.num}')">${n.active!==false?'Disable':'Enable'}</button>
+      <button class="action-btn del-btn" onclick="deleteNumber('${n.num}')">Delete</button>
+    </td>
+  </tr>`).join('');
+}
+
+function saveAdminAPI(){
+  const t=document.getElementById('a-api-token').value.trim();
+  if(!t){showMsg('a-api-msg','Token daalo!',true);return;}
+  localStorage.setItem('api_token',t);
+  localStorage.setItem('api_url',document.getElementById('a-api-url').value.trim());
+  showMsg('a-api-msg','API settings save ho gayi!',false);
+}
+
+function saveAdminTG(){
+  const t=document.getElementById('a-tg-token').value.trim();
+  const c=document.getElementById('a-tg-chat').value.trim();
+  if(!t||!c){showMsg('a-tg-msg','Dono fields bharain!',true);return;}
+  localStorage.setItem('admin_tg_token',t);
+  localStorage.setItem('admin_tg_chat',c);
+  showMsg('a-tg-msg','Telegram save ho gaya!',false);
+}
+
+async function testAdminTG(){
+  const t=localStorage.getItem('admin_tg_token');
+  const c=localStorage.getItem('admin_tg_chat');
+  if(!t||!c){showMsg('a-tg-msg','Pehle save karo!',true);return;}
+  try{
+    await sendTG(t,c,'🧪 <b>Admin Test</b>\n✅ OTP System connected!\n⏰ '+new Date().toLocaleString());
+    showMsg('a-tg-msg','Test bhej diya!',false);
+  }catch(e){showMsg('a-tg-msg','Error: '+e.message,true);}
+}
+
+async function adminQuickFetch(){
+  const rec=document.getElementById('a-quick-rec').value;
+  const cli=document.getElementById('a-quick-cli').value.trim();
+  showMsg('a-fetch-msg','Fetch ho rahi hai...',false);
+  try{
+    const rows=await fetchOTPs({records:rec,filtercli:cli});
+    renderAdminRecent(rows);
+    document.getElementById('a-total-otp').textContent=rows.length;
+    showMsg('a-fetch-msg',rows.length+' records mili!',false);
+  }catch(e){showMsg('a-fetch-msg','Error: '+e.message,true);}
+}
+
+function renderAdminRecent(rows){
+  const tbody=document.getElementById('a-recent-tbody');
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#37474f;padding:16px">Koi data nahi</td></tr>';return;}
+  tbody.innerHTML=rows.map(r=>{
+    const otp=extractOTP(r.message);
+    return `<tr>
+      <td style="font-size:10px;white-space:nowrap">${(r.dt||'').substring(0,16)}</td>
+      <td class="masked">${maskNumber(r.num||'')}</td>
+      <td style="color:#ffb74d;font-family:monospace;font-weight:bold">${otp||'—'}</td>
+      <td style="font-size:11px">${r.cli||'—'}</td>
+      <td style="font-size:10px;max-width:150px;word-break:break-word">${r.message||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function bulkForward(){
+  const t=localStorage.getItem('admin_tg_token');
+  const c=localStorage.getItem('admin_tg_chat');
+  if(!t||!c){showMsg('a-bulk-msg','Telegram settings save karo!',true);return;}
+  const rec=document.getElementById('a-bulk-rec').value;
+  const cli=document.getElementById('a-bulk-cli').value.trim();
+  showMsg('a-bulk-msg','Fetch + forward ho raha hai...',false);
+  try{
+    const rows=await fetchOTPs({records:rec,filtercli:cli});
+    let sent=0;
+    for(const r of rows){
+      const otp=extractOTP(r.message);
+      if(!otp) continue;
+      await sendTG(t,c,`📲 <b>OTP</b>\n📱 <code>${maskNumber(r.num)}</code>\n🔑 <b>${otp}</b>\n📨 ${r.cli||'—'}\n💬 ${r.message}\n⏰ ${(r.dt||'').substring(0,16)}`);
+      sent++;
+      await sleep(400);
+    }
+    showMsg('a-bulk-msg',sent+' OTPs Telegram pe bhej diye!',false);
+  }catch(e){showMsg('a-bulk-msg','Error: '+e.message,true);}
+}
+
+// ===== TELEGRAM =====
+async function sendTG(token,chatId,text){
+  const res=await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:chatId,text,parse_mode:'HTML'})
+  });
+  const d=await res.json();
+  if(!d.ok) throw new Error(d.description||'TG error');
+  return d;
+}
+
+// ===== AUTO FORWARD ENGINE =====
+let autoTimer=null;
+let autoRunning=false;
+let seenOTPs=new Set(JSON.parse(localStorage.getItem('seen_otps')||'[]'));
+let autoStats={sent:0,checked:0,errors:0};
+
+function saveSeenOTPs(){
+  // Keep only last 500 to avoid overflow
+  const arr=Array.from(seenOTPs).slice(-500);
+  localStorage.setItem('seen_otps',JSON.stringify(arr));
+}
+
+function getAutoSettings(){
+  return {
+    enabled: localStorage.getItem('auto_enabled')==='1',
+    interval: parseInt(localStorage.getItem('auto_interval')||'30000'),
+    tgToken: localStorage.getItem('admin_tg_token')||'',
+    tgChat: localStorage.getItem('admin_tg_chat')||'',
+    records: localStorage.getItem('auto_records')||'50',
+    cliFilter: localStorage.getItem('auto_cli')||'',
+    skipDup: localStorage.getItem('auto_skip_dup')!=='0'
+  };
+}
+
+async function autoFetchAndForward(){
+  const cfg=getAutoSettings();
+  if(!cfg.tgToken||!cfg.tgChat) return;
+  autoStats.checked++;
+  updateAutoUI();
+  try{
+    const rows=await fetchOTPs({records:cfg.records, filtercli:cfg.cliFilter});
+    let newCount=0;
+    for(const r of rows){
+      const otp=extractOTP(r.message);
+      if(!otp) continue;
+      const uid=r.dt+'_'+r.num+'_'+otp;
+      if(cfg.skipDup && seenOTPs.has(uid)) continue;
+      seenOTPs.add(uid);
+      newCount++;
+      autoStats.sent++;
+      // Send to Telegram
+      const msg=formatAutoTGMsg(r,otp);
+      try{
+        await sendTG(cfg.tgToken, cfg.tgChat, msg);
+        addAutoLog(`✅ Sent: ${maskNumber(r.num)} → OTP: ${otp}`, 'ok');
+      }catch(e){
+        autoStats.errors++;
+        addAutoLog(`❌ TG Error: ${e.message}`, 'err');
+      }
+      await sleep(400);
+    }
+    saveSeenOTPs();
+    if(newCount===0) addAutoLog(`🔍 Check #${autoStats.checked} — Koi naya OTP nahi`, 'info');
+    updateAutoUI();
+  }catch(e){
+    autoStats.errors++;
+    addAutoLog(`❌ Fetch Error: ${e.message}`, 'err');
+  }
+}
+
+function formatAutoTGMsg(r, otp){
+  return `🔔 <b>New OTP Received!</b>
+━━━━━━━━━━━━━━━
+📱 <b>Number:</b> <code>${maskNumber(r.num)}</code>
+🔑 <b>OTP:</b> <code>${otp}</code>
+📨 <b>Sender:</b> ${r.cli||'—'}
+💬 <b>Message:</b> ${r.message||'—'}
+⏰ <b>Time:</b> ${(r.dt||'').substring(0,16)}
+💰 <b>Payout:</b> ${r.payout||'—'}
+━━━━━━━━━━━━━━━`;
+}
+
+function startAutoForward(){
+  const cfg=getAutoSettings();
+  if(!cfg.tgToken||!cfg.tgChat){
+    showMsg('a-auto-msg','Pehle Telegram settings save karo!',true);
+    return;
+  }
+  if(!getAPI().token){
+    showMsg('a-auto-msg','Pehle API token save karo!',true);
+    return;
+  }
+  autoRunning=true;
+  localStorage.setItem('auto_enabled','1');
+  autoStats={sent:0,checked:0,errors:0};
+  document.getElementById('auto-start-btn').style.display='none';
+  document.getElementById('auto-stop-btn').style.display='flex';
+  document.getElementById('auto-status-dot').style.background='#69f0ae';
+  document.getElementById('auto-status-dot').style.boxShadow='0 0 8px #69f0ae';
+  document.getElementById('auto-status-txt').textContent='Running';
+  document.getElementById('auto-status-txt').style.color='#69f0ae';
+  addAutoLog('🚀 Auto Forward Started!', 'ok');
+  autoFetchAndForward();
+  autoTimer=setInterval(autoFetchAndForward, cfg.interval);
+  updateAutoUI();
+}
+
+function stopAutoForward(){
+  autoRunning=false;
+  localStorage.setItem('auto_enabled','0');
+  clearInterval(autoTimer);
+  autoTimer=null;
+  document.getElementById('auto-start-btn').style.display='flex';
+  document.getElementById('auto-stop-btn').style.display='none';
+  document.getElementById('auto-status-dot').style.background='#ef5350';
+  document.getElementById('auto-status-dot').style.boxShadow='none';
+  document.getElementById('auto-status-txt').textContent='Stopped';
+  document.getElementById('auto-status-txt').style.color='#ef5350';
+  addAutoLog('⏹ Auto Forward Stopped', 'err');
+}
+
+function updateAutoUI(){
+  const el=document.getElementById('auto-stats-box');
+  if(el) el.innerHTML=`<span style="color:#4fc3f7">Checks: <b>${autoStats.checked}</b></span> &nbsp; <span style="color:#69f0ae">Sent: <b>${autoStats.sent}</b></span> &nbsp; <span style="color:#ef5350">Errors: <b>${autoStats.errors}</b></span>`;
+}
+
+function addAutoLog(msg, type){
+  const box=document.getElementById('auto-log');
+  if(!box) return;
+  const t=new Date().toLocaleTimeString();
+  const colors={ok:'#69f0ae',err:'#ef9a9a',info:'#90a4ae'};
+  const div=document.createElement('div');
+  div.style.cssText=`padding:3px 0;border-bottom:1px solid #0d1b2a;font-size:11px;color:${colors[type]||'#90a4ae'}`;
+  div.innerHTML=`<span style="color:#546e7a;margin-right:8px">${t}</span>${msg}`;
+  box.insertBefore(div, box.firstChild);
+  if(box.children.length>50) box.removeChild(box.lastChild);
+}
+
+function saveAutoSettings(){
+  localStorage.setItem('auto_interval', document.getElementById('auto-interval').value);
+  localStorage.setItem('auto_records', document.getElementById('auto-records-sel').value);
+  localStorage.setItem('auto_cli', document.getElementById('auto-cli-filter').value.trim());
+  localStorage.setItem('auto_skip_dup', document.getElementById('auto-skip-dup').checked?'1':'0');
+  showMsg('a-auto-msg','Auto settings save ho gayi!',false);
+  if(autoRunning){
+    clearInterval(autoTimer);
+    autoTimer=setInterval(autoFetchAndForward, parseInt(document.getElementById('auto-interval').value));
+  }
+}
+
+// ===== UTILS =====
+function showMsg(id,msg,isErr){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.style.display='block';
+  el.className='msg-box '+(isErr?'msg-err':'msg-ok');
+  el.textContent=msg;
+  setTimeout(()=>el.style.display='none',5000);
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ===== INIT =====
+window.onload=function(){
+  renderPublicNumbers();
+  const pubT=localStorage.getItem('pub_tg_token');
+  const pubC=localStorage.getItem('pub_tg_chat');
+  if(pubT) document.getElementById('pub-tg-token').value=pubT;
+  if(pubC) document.getElementById('pub-tg-chat').value=pubC;
+  if(localStorage.getItem('admin_logged')==='1'){
+    document.getElementById('admin-nav-btn').className='nav-btn active-admin';
+    document.getElementById('admin-nav-btn').textContent='✅ Admin';
+  }
+  // Load auto settings
+  const ai=localStorage.getItem('auto_interval');
+  const ar=localStorage.getItem('auto_records');
+  const ac=localStorage.getItem('auto_cli');
+  const ad=localStorage.getItem('auto_skip_dup');
+  if(ai&&document.getElementById('auto-interval')) document.getElementById('auto-interval').value=ai;
+  if(ar&&document.getElementById('auto-records-sel')) document.getElementById('auto-records-sel').value=ar;
+  if(ac&&document.getElementById('auto-cli-filter')) document.getElementById('auto-cli-filter').value=ac;
+  if(ad==='0'&&document.getElementById('auto-skip-dup')) document.getElementById('auto-skip-dup').checked=false;
+};
+</script>
+</body>
+</html>
