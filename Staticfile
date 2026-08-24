@@ -1,0 +1,2 @@
+# Serve the repository root as a static website.
+root: .
