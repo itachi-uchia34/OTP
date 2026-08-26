@@ -276,9 +276,12 @@ let autoStats={sent:0,checked:0,errors:0};
 
 // ===== MASKING =====
 function maskNumber(num){
-  const s=num.replace(/\D/g,'');
+  const s=String(num||'').replace(/\D/g,'');
   if(s.length<=6) return s;
   return s.substring(0,3)+'*'.repeat(s.length-6)+s.substring(s.length-3);
+}
+function escapeHTML(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
 
 // ===== PAGES =====
@@ -327,14 +330,14 @@ async function refreshAllOTPs(){
       const otp=extractOTP(r.message);
       return `<div class="otp-item">
         ${otp?`<button class="copy-otp" onclick="copyOTP('${otp}',this)">📋 Copy</button>`:''}
-        <div class="otp-code-big">${otp||'N/A'}</div>
-        <div class="otp-sender">📱 ${maskNumber(r.num||'')} &nbsp;|&nbsp; 📨 ${r.cli||'—'}</div>
-        <div class="otp-msg-text">${r.message||''}</div>
-        <div class="otp-time">⏰ ${(r.dt||'').substring(0,16)}</div>
+        <div class="otp-code-big">${escapeHTML(otp||'N/A')}</div>
+        <div class="otp-sender">📱 ${escapeHTML(maskNumber(r.num||''))} &nbsp;|&nbsp; 📨 ${escapeHTML(r.cli||'—')}</div>
+        <div class="otp-msg-text">${escapeHTML(r.message||'')}</div>
+        <div class="otp-time">⏰ ${escapeHTML(String(r.dt||'').substring(0,16))}</div>
       </div>`;
     }).join('');
   }catch(e){
-    box.innerHTML=`<div class="no-otp" style="color:#ef9a9a">⚠️ ${e.message}</div>`;
+    box.innerHTML=`<div class="no-otp" style="color:#ef9a9a">⚠️ ${escapeHTML(e.message||'Unknown error')}</div>`;
   }
 }
 
@@ -380,7 +383,7 @@ function loadAdminData(){
 function addNumber(){
   const num=document.getElementById('a-add-num').value.trim().replace(/\s/g,'');
   const label=document.getElementById('a-add-label').value.trim();
-  if(!num){showMsg('a-num-msg','Number daalo!',true);return;}
+  if(!/^\+?[0-9]{7,15}$/.test(num)){showMsg('a-num-msg','Valid phone number daalo!',true);return;}
   if(numbers.find(n=>n.num===num)){showMsg('a-num-msg','Yeh number already hai!',true);return;}
   numbers.push({num,label,active:true,added:new Date().toISOString()});
   saveNumbers();renderAdminNumbers();
@@ -404,12 +407,12 @@ function renderAdminNumbers(){
   const tbody=document.getElementById('a-num-tbody');
   if(!numbers.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:#37474f;padding:20px">Koi number nahi</td></tr>';return;}
   tbody.innerHTML=numbers.map(n=>`<tr>
-    <td class="masked">${n.num}</td>
-    <td>${n.label||'—'}</td>
+    <td class="masked">${escapeHTML(n.num)}</td>
+    <td>${escapeHTML(n.label||'—')}</td>
     <td><span class="pill ${n.active!==false?'pill-on':'pill-off'}">${n.active!==false?'Active':'Off'}</span></td>
     <td style="display:flex;gap:4px">
-      <button class="action-btn toggle-btn" onclick="toggleNumber('${n.num}')">${n.active!==false?'Off':'On'}</button>
-      <button class="action-btn del-btn" onclick="deleteNumber('${n.num}')">Del</button>
+      <button class="action-btn toggle-btn" data-num="${escapeHTML(n.num)}" onclick="toggleNumber(this.dataset.num)">${n.active!==false?'Off':'On'}</button>
+      <button class="action-btn del-btn" data-num="${escapeHTML(n.num)}" onclick="deleteNumber(this.dataset.num)">Del</button>
     </td>
   </tr>`).join('');
 }
@@ -454,11 +457,11 @@ function renderAdminRecent(rows){
   tbody.innerHTML=rows.map(r=>{
     const otp=extractOTP(r.message);
     return `<tr>
-      <td style="font-size:10px;white-space:nowrap">${(r.dt||'').substring(0,16)}</td>
-      <td class="masked">${maskNumber(r.num||'')}</td>
-      <td style="color:#ffb74d;font-family:monospace;font-weight:bold">${otp||'—'}</td>
-      <td style="font-size:11px">${r.cli||'—'}</td>
-      <td style="font-size:10px;max-width:150px;word-break:break-word">${r.message||'—'}</td>
+      <td style="font-size:10px;white-space:nowrap">${escapeHTML(String(r.dt||'').substring(0,16))}</td>
+      <td class="masked">${escapeHTML(maskNumber(r.num||''))}</td>
+      <td style="color:#ffb74d;font-family:monospace;font-weight:bold">${escapeHTML(otp||'—')}</td>
+      <td style="font-size:11px">${escapeHTML(r.cli||'—')}</td>
+      <td style="font-size:10px;max-width:150px;word-break:break-word">${escapeHTML(r.message||'—')}</td>
     </tr>`;
   }).join('');
 }
@@ -484,7 +487,7 @@ async function sendTG(token,chatId,text){
   const d=await res.json();if(!d.ok)throw new Error(d.description||'TG error');return d;
 }
 function formatTGMsg(r,otp){
-  return `🔔 <b>New OTP!</b>\n━━━━━━━━━━━━━━━\n📱 <b>Number:</b> <code>${maskNumber(r.num)}</code>\n🔑 <b>OTP:</b> <code>${otp}</code>\n📨 <b>Sender:</b> ${r.cli||'—'}\n💬 <b>Msg:</b> ${r.message||'—'}\n⏰ <b>Time:</b> ${(r.dt||'').substring(0,16)}\n━━━━━━━━━━━━━━━`;
+  return `🔔 <b>New OTP!</b>\n━━━━━━━━━━━━━━━\n📱 <b>Number:</b> <code>${escapeHTML(maskNumber(r.num))}</code>\n🔑 <b>OTP:</b> <code>${escapeHTML(otp)}</code>\n📨 <b>Sender:</b> ${escapeHTML(r.cli||'—')}\n💬 <b>Msg:</b> ${escapeHTML(r.message||'—')}\n⏰ <b>Time:</b> ${escapeHTML(String(r.dt||'').substring(0,16))}\n━━━━━━━━━━━━━━━`;
 }
 
 // ===== AUTO FORWARD =====
@@ -554,7 +557,10 @@ function addAutoLog(msg,type){
   const colors={ok:'#69f0ae',err:'#ef9a9a',info:'#90a4ae'};
   const div=document.createElement('div');
   div.style.cssText=`padding:3px 0;border-bottom:1px solid #0d1b2a;font-size:11px;color:${colors[type]||'#90a4ae'}`;
-  div.innerHTML=`<span style="color:#546e7a;margin-right:8px">${new Date().toLocaleTimeString()}</span>${msg}`;
+  const time=document.createElement('span');
+  time.style.cssText='color:#546e7a;margin-right:8px';
+  time.textContent=new Date().toLocaleTimeString();
+  div.append(time,document.createTextNode(String(msg)));
   box.insertBefore(div,box.firstChild);
   if(box.children.length>50)box.removeChild(box.lastChild);
 }
